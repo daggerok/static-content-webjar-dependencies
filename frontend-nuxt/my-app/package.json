@@ -1,0 +1,22 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "description": "My spectacular Nuxt.js project",
+  "author": "Maksim Kostromin",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "nuxt": "1.4.0",
+    "vuetify": "1.0.17"
+  },
+  "devDependencies": {
+    "cross-env": "5.1.4",
+    "stylus": "0.54.5",
+    "stylus-loader": "3.0.2"
+  }
+}

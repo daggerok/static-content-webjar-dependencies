@@ -1,0 +1,11 @@
+= static-content-webjar-dependencies image:https://travis-ci.org/daggerok/static-content-webjar-dependencies.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/static-content-webjar-dependencies"]
+
+//tag::content[]
+This repository shows how to:
+
+- split out monolith into backend and frontend
+- build particular frontend webjar and deploy it into local maven repository
+- there are could be a few different frontend implementations support at the moment (ng, vue, nuxt, react, etc...)
+- configure and depends on webjars static content into your spring boot 2.x backend webapp
+- any of these four available in this example fronted implementations could be quickly and easily replaced and rebuilt in a minutes...
+//end::content[]

@@ -1,0 +1,6 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  thymeleaf:
+    prefix: classpath:META-INF/resources/public/

@@ -1,0 +1,83 @@
+= angular frontend
+
+.build webjars project
+----
+# gradle webjar wrapper project
+gradle wrapper --gradle-version=4.7 --distribution-type=all
+cat <<EOF > build.gradle
+
+plugins {
+  id 'java'
+  id 'maven'
+  id 'maven-publish'
+  id 'com.moowork.node' version '1.2.0'
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  jcenter()
+}
+
+/* node: */
+
+node {
+  download = true
+  version = '9.11.1'
+  npmVersion = '5.6.0'
+  yarnVersion = '1.6.0'
+  nodeModulesDir = file('my-app')
+}
+
+task webjar(type: Jar) {
+  /*
+  from(fileTree("my-app/dist")) {
+    into("META-INF/resources/public")
+  }
+  */
+  from(file("README.adoc")) {
+    into "."
+  }
+  from(fileTree("my-app/dist")) {
+    into "META-INF/resources/public"
+  }
+}
+
+clean.doFirst {
+  delete "$projectDir/.gradle"
+}
+
+assemble.dependsOn webjar
+webjar.dependsOn yarn_build
+yarn_build.dependsOn yarn_install, processResources
+processResources.shouldRunAfter yarn_build
+
+/* maven: begin */
+
+group "daggerok"
+version "0.0.1"
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url "$rootDir/../local-maven-repo"
+    }
+  }
+}
+
+defaultTasks 'clean', 'build', 'publish'
+
+EOF
+
+# frontent (angular) project build as static resources bundle
+yarn global add -E @angular/cli
+ng new -sg --routing --minimal=true --service-worker=false --style=scss -st my-app
+
+# build and pubish webjar frontend artifact `daggerok:frontend:0.0.1`
+./gradlew yarn_build
+----

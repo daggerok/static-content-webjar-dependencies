@@ -1,0 +1,66 @@
+plugins {
+  id 'java'
+  id 'maven'
+  id 'maven-publish'
+  id 'com.moowork.node' version '1.2.0'
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  jcenter()
+}
+
+/* node: */
+
+node {
+  download = true
+  version = '9.11.1'
+  npmVersion = '5.6.0'
+  yarnVersion = '1.6.0'
+  nodeModulesDir = file('my-app')
+}
+
+task webjar(type: Jar) {
+  /*
+  from(fileTree("my-app/dist")) {
+    into("META-INF/resources/public")
+  }
+  */
+  from(file("README.adoc")) {
+    into "."
+  }
+  from(fileTree("my-app/dist")) {
+    into "META-INF/resources/public"
+  }
+}
+
+
+clean.doFirst {
+  delete "$projectDir/.gradle"
+}
+
+assemble.dependsOn webjar
+webjar.dependsOn yarn_build
+yarn_build.dependsOn yarn_install, processResources
+processResources.shouldRunAfter yarn_build
+
+/* maven: begin */
+
+group "daggerok"
+version "0.0.1"
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url "$rootDir/../local-maven-repo"
+    }
+  }
+}
+
+defaultTasks 'clean', 'build', 'publish'
